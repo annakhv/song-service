@@ -9,6 +9,6 @@ services:
     volumes:
       - ~/apps/postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=song-password
+      - POSTGRES_PASSWORD=S3cret
       - POSTGRES_USER=song
       - POSTGRES_DB=song
