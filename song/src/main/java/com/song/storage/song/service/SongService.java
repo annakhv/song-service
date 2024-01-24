@@ -31,7 +31,7 @@ public class SongService {
         validateScv(resourceIds);
         List<String> idsList = Arrays.asList(resourceIds.split(","));
         return idsList.stream()
-                .mapToLong(Long::valueOf)
+                .mapToLong(Long::parseLong)
                 .filter(songDataRepository::existsByResourceId)
                 .peek(songDataRepository::deleteByResourceId)
                 .toArray();

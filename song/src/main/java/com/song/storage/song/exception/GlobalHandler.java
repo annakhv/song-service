@@ -18,6 +18,7 @@ public class GlobalHandler {
         Map<String, Object> errorMap = new LinkedHashMap<>();
         if (exception instanceof IdNotFoundException) {
             errorMap.put("statusCode", HttpStatus.NOT_FOUND.toString());
+            errorMap.put("message", exception.getMessage());
             return new ResponseEntity<>(errorMap, HttpStatus.NOT_FOUND);
         } else {
             errorMap.put("statusCode", HttpStatus.BAD_REQUEST.toString());
