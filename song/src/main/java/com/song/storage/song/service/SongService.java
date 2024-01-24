@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.song.storage.song.entity.SongData;
+import com.song.storage.song.exception.IdNotFoundException;
+import com.song.storage.song.exception.InvalidScvException;
 import com.song.storage.song.repository.SongDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,17 +20,24 @@ public class SongService {
         return songDataRepository.save(songData).getId();
     }
 
-    public SongData getSong(Long songId) {
-        return songDataRepository.findById(songId)
-                .orElseThrow(() -> new RuntimeException("no metadata found for id " + songId));
+    public SongData getSong(Long songResourceId) {
+        return songDataRepository.findByResourceId(songResourceId)
+                .orElseThrow(() -> new IdNotFoundException("no metadata found for id " + songResourceId));
     }
 
-    public long[] deleteSong(String ids) {
-        List<String> idsList = Arrays.asList(ids.split(","));
+    public long[] deleteSong(String resourceIds) {
+        validateScv(resourceIds);
+        List<String> idsList = Arrays.asList(resourceIds.split(","));
         return idsList.stream()
                 .mapToLong(Long::valueOf)
                 .filter(songDataRepository::existsById)
-                .peek(songDataRepository::deleteById)
+                .peek(songDataRepository::deleteByResourceId)
                 .toArray();
+    }
+
+    private void validateScv(String ids) {
+        if (ids.length() >= 200) {
+            throw new InvalidScvException("provided scv is invalid");
+        }
     }
 }
