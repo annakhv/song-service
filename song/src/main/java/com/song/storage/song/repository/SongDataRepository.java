@@ -10,4 +10,6 @@ public interface SongDataRepository extends JpaRepository<SongData, Long> {
     Optional<SongData> findByResourceId(long resourceId);
 
     void deleteByResourceId(long resourceId);
+
+    boolean existsByResourceId(long resourceId);
 }

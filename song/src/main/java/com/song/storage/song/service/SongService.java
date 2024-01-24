@@ -9,6 +9,7 @@ import com.song.storage.song.exception.InvalidScvException;
 import com.song.storage.song.repository.SongDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +26,13 @@ public class SongService {
                 .orElseThrow(() -> new IdNotFoundException("no metadata found for id " + songResourceId));
     }
 
+    @Transactional
     public long[] deleteSong(String resourceIds) {
         validateScv(resourceIds);
         List<String> idsList = Arrays.asList(resourceIds.split(","));
         return idsList.stream()
                 .mapToLong(Long::valueOf)
-                .filter(songDataRepository::existsById)
+                .filter(songDataRepository::existsByResourceId)
                 .peek(songDataRepository::deleteByResourceId)
                 .toArray();
     }
